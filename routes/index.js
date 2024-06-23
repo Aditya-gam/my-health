@@ -6,7 +6,7 @@ const groqRoutes = require('./groqRoutes');
 const router = express.Router();
 
 // Use textract routes
-router.use('/groq', textractRoutes);
+router.use('/textract', textractRoutes);
 
 // // Use groq routes
 // router.use('/groq', groqRoutes);

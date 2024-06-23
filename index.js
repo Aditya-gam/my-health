@@ -17,12 +17,11 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 // Use the routes defined in the routes folder
 app.use('/api', routes);
 
-
 try {
   // Start the server
   app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
 } catch (error) {
   console.error("Error during server startup:", error);
 }

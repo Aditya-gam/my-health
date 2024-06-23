@@ -1,12 +1,13 @@
 // routes/textractRoutes.js
 const express = require("express");
-const path = require("path");
-const { readFileBytes, saveToJsonFile } = require("../utils/fileUtils");
+const { readFileBytes } = require("../utils/fileUtils");
 const { analyzeDocument } = require("../services/textractService");
 const {
   processAndSaveTransformedJsonGroq,
   generateInference,
 } = require("../services/groqServices");
+const { removeSpecialCharacters } = require("../utils/fileUtils");
+const path = require("path");
 
 const router = express.Router();
 
@@ -20,54 +21,22 @@ router.post("/textract-analyze-infer", async (req, res) => {
     }
 
     // Step 1: Analyze the document using Textract
-    const imageBytes = readFileBytes(
-      path.join(__dirname, "..", "assets", imagePath)
-    );
+    const imageBytes = readFileBytes(path.join(__dirname, "..", "assets", imagePath));
     const structuredData = await analyzeDocument(imageBytes);
 
-    // Save the structured data to a temporary JSON file
-    const tempOutputJsonPath = path.join(
-      __dirname,
-      "..",
-      "outputs",
-      "json",
-      `structured_output_temp_${Date.now()}.json`
-    );
-    saveToJsonFile(structuredData, tempOutputJsonPath);
-
     // Step 2: Transform the JSON using GROQ
-    const finalOutputJsonPath = path.join(
-      __dirname,
-      "..",
-      "outputs",
-      "json",
-      `structured_output_final_${Date.now()}.json`
-    );
-    await processAndSaveTransformedJsonGroq(
-      tempOutputJsonPath,
-      finalOutputJsonPath
-    );
+    const transformedJson = await processAndSaveTransformedJsonGroq(structuredData);
+    const cleanedStructuredData = removeSpecialCharacters(transformedJson.choices[0].message.content);
 
-    // Read the final transformed JSON for the response
-    // const transformedData = require(finalOutputJsonPath);
+    // Step 3: Generate the inference
+    const inferenceData = await generateInference(transformedJson);
+    const cleanedInference = removeSpecialCharacters(inferenceData.choices[0].message.content);
 
-    const inferenceOutputJsonPath = path.join(
-      __dirname,
-      "..",
-      "outputs",
-      "json",
-      `inference_output_${Date.now()}.json`
-    );
-    await generateInference(finalOutputJsonPath, inferenceOutputJsonPath);
-
-    // Read the final inference JSON for the response
-    const inferenceData = require(inferenceOutputJsonPath);  
-
-    // Respond with the final transformed JSON
+    // Respond with the final transformed and inferred JSON
     res.status(200).json({
       message: "Document analyzed, transformed, and inferred successfully",
-      structuredData: require(finalOutputJsonPath).choices[0].message.content,
-      Inference: inferenceData.choices[0].message.content,
+      structuredData: transformedJson.choices[0].message.content,
+      inference: cleanedInference,
     });
   } catch (error) {
     console.error("Error during analyze and transform process:", error);
