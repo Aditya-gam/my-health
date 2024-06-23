@@ -1,0 +1,29 @@
+{
+  "id": "chatcmpl-ae768e7f-67c6-4573-bb79-22f973dd869f",
+  "object": "chat.completion",
+  "created": 1719131193,
+  "model": "mixtral-8x7b-32768",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n \"patientInfo\": {\n \"lifestyle\": {\n \"smokingStatus\": \"Non-smoker\",\n \"exercisefrequency\": \"exercises thrice weekly\"\n },\n \"medications\": [\n {\n \"name\": \"hypertension medication\",\n \"dosage\": \"10mg\",\n \"frequency\": \"once daily\"\n },\n {\n \"name\": \"pain medication\",\n \"dosage\": \"400mg\",\n \"frequency\": \"as needed\"\n }\n ]\n },\n \"visitSummary\": {\n \"progressNotes\": [\n {\n \"date\": \"20/11/2023\",\n \"notes\": \"Patient presents with lower back pain, no signs of acute distress, prescribed physical therapy, advised to continue medication regimen.\"\n }\n ],\n \"summaryOfVisit\": \"Summary of visit\"\n }\n}"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 186,
+    "prompt_time": 0.134864563,
+    "completion_tokens": 201,
+    "completion_time": 0.320405311,
+    "total_tokens": 387,
+    "total_time": 0.455269874
+  },
+  "system_fingerprint": "fp_c5f20b5bb1",
+  "x_groq": {
+    "id": "req_01j1238fajehptm6v6xex5h70d"
+  }
+}

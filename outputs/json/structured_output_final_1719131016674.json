@@ -1,0 +1,29 @@
+{
+  "id": "chatcmpl-c3b97b05-6f88-49c1-8daa-91667b015296",
+  "object": "chat.completion",
+  "created": 1719131017,
+  "model": "mixtral-8x7b-32768",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n\"medicalChart\": {\n\"patientInformation\": {\n\"name\": \"Billy Noel\",\n\"age\": \"67\",\n\"gender\": \"M\",\n\"contactNumber\": \"138-000-111\",\n\"insuranceDetails\": \"Caritas Insurance, Policy #78901234\"\n},\n\"currentHealthStatus\": \"Reported low back pain and hypertension\",\n\"vitalSigns\": {\n\"bloodPressure\": \"120/80 mmHg\",\n\"pulse\": \"70 bpm\",\n\"temperature\": \"98,6°F\",\n\"respiratoryRate\": \"16 breaths per minute\",\n\"oxygenSaturation\": \"98%\"\n},\n\"symptoms\": \"Patient complains of persistent lower back pain for the last week.\",\n\"medicalHistory\": \"Hyper tension, appendectomy in 2010\",\n\"allergies\": \"NKA\"\n}\n}"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 301,
+    "prompt_time": 0.04930433,
+    "completion_tokens": 235,
+    "completion_time": 0.360998719,
+    "total_tokens": 536,
+    "total_time": 0.41030304900000003
+  },
+  "system_fingerprint": "fp_c5f20b5bb1",
+  "x_groq": {
+    "id": "req_01j12333khfc6a2vaq0j108v2s"
+  }
+}

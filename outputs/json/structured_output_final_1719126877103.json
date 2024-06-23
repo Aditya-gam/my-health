@@ -1,0 +1,29 @@
+{
+  "id": "chatcmpl-c47f1b6a-2821-4671-95e9-86a3841b71a1",
+  "object": "chat.completion",
+  "created": 1719126877,
+  "model": "mixtral-8x7b-32768",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n \"patientInformation\": {\n \"lifestyle\": \"Non-smoker, exercises thrice weekly\",\n \"medications\": [\n {\n \"name\": \"10mg\",\n \"frequency\": \"once daily\",\n \"indication\": \"for hypertension\"\n },\n {\n \"name\": \"400mg\",\n \"frequency\": \"as needed\",\n \"indication\": \"for pain\"\n }\n ]\n },\n \"progressNotes\": [\n {\n \"date\": \"20/11/2023\",\n \"notes\": \"Patient presents with lower back pain, no signs of acute distress, prescribed physical therapy, advised to continue medication regimen.\"\n }\n ]\n}"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 186,
+    "prompt_time": 0.02834198,
+    "completion_tokens": 160,
+    "completion_time": 0.254626794,
+    "total_tokens": 346,
+    "total_time": 0.282968774
+  },
+  "system_fingerprint": "fp_c5f20b5bb1",
+  "x_groq": {
+    "id": "req_01j11z4rzsf178hfcwrpc2k276"
+  }
+}
