@@ -6,24 +6,24 @@ const { readJsonFile, saveToJsonFile } = require("../utils/fileUtils");
 async function transformJsonUsingGroq(inputJson, prompt) {
   try {
     const data = JSON.stringify({
-      "messages": [
+      messages: [
         {
-          "role": "user",
-          "content": prompt
-        }
+          role: "user",
+          content: prompt,
+        },
       ],
-      "model": "mixtral-8x7b-32768"
+      model: "mixtral-8x7b-32768",
     });
 
     const config = {
-      method: 'post',
+      method: "post",
       maxBodyLength: Infinity,
       url: groqApiUrl,
-      headers: { 
-        'Authorization': `Bearer ${groqApiKey}`, 
-        'Content-Type': 'application/json'
+      headers: {
+        Authorization: `Bearer ${groqApiKey}`,
+        "Content-Type": "application/json",
       },
-      data: data
+      data: data,
     };
 
     const response = await axios.request(config);
@@ -35,7 +35,10 @@ async function transformJsonUsingGroq(inputJson, prompt) {
   }
 }
 
-async function processAndSaveTransformedJsonGroq(inputFilePath, outputFilePath) {
+async function processAndSaveTransformedJsonGroq(
+  inputFilePath,
+  outputFilePath
+) {
   try {
     // Read the input JSON file
     const inputData = readJsonFile(inputFilePath);
@@ -54,6 +57,30 @@ async function processAndSaveTransformedJsonGroq(inputFilePath, outputFilePath) 
   }
 }
 
+async function generateInference(inputFilePath, outputFilePath) {
+  try {
+    // Read the transformed JSON file
+    const transformedData = readJsonFile(inputFilePath);
+
+    // Create the prompt for GROQ API
+    const prompt = `This is a medical chart of a patient. Provide a detailed explanation such that the patient understands what is written in the chart and can draw inferences from it. Your response should be as if you are explaining to the patient directly. ${JSON.stringify(
+      transformedData
+    )}`;
+
+    // Request a simplified explanation from the GROQ API
+    const explanationData = await transformJsonUsingGroq(
+      transformedData,
+      prompt
+    );
+
+    // Save the simplified explanation to the output file
+    saveToJsonFile(explanationData, outputFilePath);
+  } catch (error) {
+    console.error("Error generating and saving layman explanation:", error);
+  }
+}
+
 module.exports = {
-    processAndSaveTransformedJsonGroq,
+  processAndSaveTransformedJsonGroq,
+  generateInference,
 };
