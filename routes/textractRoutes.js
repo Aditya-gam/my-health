@@ -3,8 +3,10 @@ const express = require("express");
 const path = require("path");
 const { readFileBytes, saveToJsonFile } = require("../utils/fileUtils");
 const { analyzeDocument } = require("../services/textractService");
-const { processAndSaveTransformedJsonGroq } = require('../services/groqServices');
-
+const {
+  processAndSaveTransformedJsonGroq,
+  generateInference,
+} = require("../services/groqServices");
 
 const router = express.Router();
 
@@ -47,16 +49,26 @@ router.post("/textract-analyze-infer", async (req, res) => {
     );
 
     // Read the final transformed JSON for the response
-    const transformedData = require(finalOutputJsonPath);
+    // const transformedData = require(finalOutputJsonPath);
+
+    const inferenceOutputJsonPath = path.join(
+      __dirname,
+      "..",
+      "outputs",
+      "json",
+      `inference_output_${Date.now()}.json`
+    );
+    await generateInference(finalOutputJsonPath, inferenceOutputJsonPath);
+
+    // Read the final inference JSON for the response
+    const inferenceData = require(inferenceOutputJsonPath);  
 
     // Respond with the final transformed JSON
-    res
-      .status(200)
-      .json({
-        message: "Document analyzed and transformed successfully",
-        data: transformedData.choices[0].message.content,
-        outputPath: finalOutputJsonPath,
-      });
+    res.status(200).json({
+      message: "Document analyzed, transformed, and inferred successfully",
+      structuredData: require(finalOutputJsonPath).choices[0].message.content,
+      Inference: inferenceData.choices[0].message.content,
+    });
   } catch (error) {
     console.error("Error during analyze and transform process:", error);
     res.status(500).json({ error: "Internal server error" });
