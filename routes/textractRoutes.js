@@ -29,13 +29,12 @@ router.post("/textract-analyze-infer", async (req, res) => {
     const cleanedStructuredData = removeSpecialCharacters(transformedJson.choices[0].message.content);
 
     // Step 3: Generate the inference
-    const inferenceData = await generateInference(transformedJson);
+    const inferenceData = await generateInference(cleanedStructuredData);
     const cleanedInference = removeSpecialCharacters(inferenceData.choices[0].message.content);
 
     // Respond with the final transformed and inferred JSON
     res.status(200).json({
       message: "Document analyzed, transformed, and inferred successfully",
-      structuredData: transformedJson.choices[0].message.content,
       inference: cleanedInference,
     });
   } catch (error) {
