@@ -33,8 +33,22 @@ function readJsonFile(jsonFilePath) {
   }
 }
 
+function removeSpecialCharacters(text) {
+  // Replace \n sequences with a space
+  let cleanedText = text.replace(/\n+/g, ' '); // Replace \n with a space
+
+  // Regular expression to match special characters (excluding basic punctuation, letters, numbers, and whitespace)
+  const regex = /[^\w\s.,-:]+/g;
+
+  // Replace special characters with an empty string
+  cleanedText = cleanedText.replace(regex, '');
+
+  return cleanedText;
+}
+
 module.exports = {
   readFileBytes,
   saveToJsonFile,
   readJsonFile,
+  removeSpecialCharacters,
 };
