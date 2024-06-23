@@ -2,6 +2,7 @@
 const express = require("express");
 const { readFileBytes } = require("../utils/fileUtils");
 const { analyzeDocument } = require("../services/textractService");
+const { redactMedicalInfo } = require("../services/awsMedicalComprehendServices");
 const {
   processAndSaveTransformedJsonGroq,
   generateInference,
@@ -24,9 +25,13 @@ router.post("/textract-analyze-infer", async (req, res) => {
     const imageBytes = readFileBytes(path.join(__dirname, "..", "assets", imagePath));
     const structuredData = await analyzeDocument(imageBytes);
 
+    // Step 2: Redact medical information using Comprehend Medical
+    const redactedStructuredData = await redactMedicalInfo(structuredData.text);
+    const cleanedStructuredData = removeSpecialCharacters(redactedStructuredData);
+
     // Step 2: Transform the JSON using GROQ
-    const transformedJson = await processAndSaveTransformedJsonGroq(structuredData);
-    const cleanedStructuredData = removeSpecialCharacters(transformedJson.choices[0].message.content);
+    // const transformedJson = await processAndSaveTransformedJsonGroq(redactedStructuredData);
+    // const cleanedStructuredData = removeSpecialCharacters(transformedJson.choices[0].message.content);
 
     // Step 3: Generate the inference
     const inferenceData = await generateInference(cleanedStructuredData);
@@ -35,6 +40,9 @@ router.post("/textract-analyze-infer", async (req, res) => {
     // Respond with the final transformed and inferred JSON
     res.status(200).json({
       message: "Document analyzed, transformed, and inferred successfully",
+      // structuredData: structuredData.text,
+      // redactedStructuredData: redactedStructuredData,
+      // transformedJson: cleanedStructuredData,
       inference: cleanedInference,
     });
   } catch (error) {

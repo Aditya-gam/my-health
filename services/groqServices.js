@@ -52,12 +52,12 @@ async function processAndSaveTransformedJsonGroq(inputJson) {
 async function generateInference(transformedJson) {
   try {
     // Create the prompt for GROQ API
-    const prompt = `This is a medical chart of a patient. Provide a detailed explanation in an empathetic manner such that the patient understands what is written in the chart and can draw insights from it so that they can advocate for themselves. Your response should be as if you are explaining to the patient directly. ${JSON.stringify(
+    const prompt = `Please provide a clear, empathetic, and straightforward explanation of the patient's medical chart. Focus on translating the medical terms and summaries into simple language that the patient can easily understand. Ensure the explanation is concise and free of unnecessary commentary, but retains a compassionate tone to help the patient feel comfortable and informed about their medical situation. ${JSON.stringify(
       transformedJson
     )}`;
 
     // Request a simplified explanation from the GROQ API
-    const explanationData = await transformJsonUsingGroq(transformedJson, prompt, 2048);
+    const explanationData = await transformJsonUsingGroq(transformedJson, prompt, 1536);
     return explanationData;
   } catch (error) {
     console.error("Error generating layman explanation:", error);
