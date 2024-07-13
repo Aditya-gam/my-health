@@ -1,11 +1,9 @@
-// routes/groqRoutes.js
-const express = require('express');
-const { processAndSaveTransformedJsonGroq } = require('../services/groqServices');
+import express, { Request, Response } from 'express';
+import { processAndSaveTransformedJsonGroq } from '../services/groqServices';
 
 const router = express.Router();
 
-// Endpoint to transform JSON using GROQ
-router.post('/transform', async (req, res) => {
+router.post('/transform', async (req: Request, res: Response) => {
   try {
     const { inputJson } = req.body;
 
@@ -13,7 +11,6 @@ router.post('/transform', async (req, res) => {
       return res.status(400).json({ error: 'Input JSON is required' });
     }
 
-    // Process and transform JSON without saving to file
     const transformedJson = await processAndSaveTransformedJsonGroq(inputJson);
 
     res.status(200).json({ message: 'JSON transformed successfully', transformedJson });
@@ -23,4 +20,4 @@ router.post('/transform', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

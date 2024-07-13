@@ -1,27 +1,22 @@
-// services/textractService.js
-const AWS = require("../config/awsConfig");
+import AWS from '../config/awsConfig';
+
 const textract = new AWS.Textract();
 
-// Function to analyze the document and extract structured data
-async function analyzeDocument(imageBytes) {
+async function analyzeDocument(imageBytes: Buffer): Promise<any> {
   try {
-    // Prepare the request parameters
     const params = {
       Document: {
         Bytes: imageBytes,
       },
-      FeatureTypes: ["TABLES", "FORMS"], // Request analysis of tables and forms
+      FeatureTypes: ["TABLES", "FORMS"],
     };
 
-    // Call Amazon Textract to analyze the document
     const response = await textract.analyzeDocument(params).promise();
-
-    // Extract structured data from the response
     const blocks = response.Blocks;
 
-    let lines = [];
-    let keyValues = [];
-    let tables = [];
+    let lines: string[] = [];
+    let keyValues: any[] = [];
+    let tables: any[] = [];
 
     blocks.forEach((block) => {
       if (block.BlockType === "LINE") {
@@ -40,21 +35,18 @@ async function analyzeDocument(imageBytes) {
         const value = valueBlock ? valueBlock.Text : "";
         keyValues.push({ key, value });
       } else if (block.BlockType === "TABLE") {
-        let table = { Rows: [] };
+        let table: any = { Rows: [] };
         const rows = blocks.filter(
           (b) => b.BlockType === "CELL" && b.ParentId === block.Id
         );
         rows.forEach((cell) => {
-          // Initialize the row if it doesn't exist
           if (!table.Rows[cell.RowIndex - 1]) table.Rows[cell.RowIndex - 1] = [];
-          // Assign the cell text to the appropriate position
           table.Rows[cell.RowIndex - 1][cell.ColumnIndex - 1] = cell.Text || "";
         });
         tables.push(table);
       }
     });
 
-    // Create a structured JSON object
     const structuredData = {
       text: lines.join("\n"),
       keyValues: keyValues,
@@ -68,6 +60,4 @@ async function analyzeDocument(imageBytes) {
   }
 }
 
-module.exports = {
-  analyzeDocument,
-};
+export { analyzeDocument };

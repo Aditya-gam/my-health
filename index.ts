@@ -1,14 +1,15 @@
 // index.js
-require('dotenv').config(); // Load environment variables
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-const routes = require('./routes/index');
-const cors = require('cors'); // Import CORS
+import dotenv from "dotenv";
+import express from "express";
+import path from "path";
+import bodyParser from "body-parser";
+import routes from "./routes/index";
+import cors from "cors";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 9000;
-
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
@@ -16,10 +17,10 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Serve static files from the assets folder
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use("/assets", express.static(path.join(__dirname, "assets")));
 
 // Use the routes defined in the routes folder
-app.use('/api', routes);
+app.use("/api", routes);
 
 try {
   // Start the server
