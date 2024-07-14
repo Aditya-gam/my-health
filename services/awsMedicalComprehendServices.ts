@@ -2,19 +2,30 @@ import AWS from "../config/awsConfig";
 
 const comprehendMedical = new AWS.ComprehendMedical();
 
+interface Entity {
+  BeginOffset?: number;
+  EndOffset?: number;
+}
+
+interface DetectEntitiesV2Response {
+  Entities: Entity[];
+}
+
 async function redactMedicalInfo(text: string): Promise<string> {
   const params = {
     Text: text,
   };
 
   try {
-    const data = await comprehendMedical.detectEntitiesV2(params).promise();
+    const data: DetectEntitiesV2Response = await comprehendMedical.detectEntitiesV2(params).promise();
     const entities = data.Entities;
 
     let redactedText = text;
     entities.forEach((entity) => {
-      const entityText = text.substring(entity.BeginOffset, entity.EndOffset);
-      redactedText = redactedText.replace(entityText, "*****");
+      if (entity.BeginOffset !== undefined && entity.EndOffset !== undefined) {
+        const entityText = text.substring(entity.BeginOffset, entity.EndOffset);
+        redactedText = redactedText.replace(entityText, "*****");
+      }
     });
 
     return redactedText;

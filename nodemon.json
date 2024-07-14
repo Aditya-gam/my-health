@@ -1,7 +1,6 @@
 {
-    "watch": ["*.js", "routes/**/*.js"],
-    "ext": "js,json",
-    "ignore": ["assets/*"],
-    "exec": "node index.js"
-  }
-  
+  "watch": ["src"],
+  "ext": "ts",
+  "ignore": ["dist"],
+  "exec": "ts-node ./index.ts"
+}

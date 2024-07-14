@@ -7,6 +7,7 @@ import { generateInference } from "../services/groqServices";
 import { removeSpecialCharacters, readFileBytes } from "../utils/fileUtils";
 import AWS from "../config/awsConfig";
 import upload from "../middleware/multerConfig";
+import "../types/express"; // Ensure this is imported to extend the Request interface
 
 const router = express.Router();
 const s3 = new AWS.S3();
@@ -93,11 +94,14 @@ router.get("/fetchDynamo", async (req: Request, res: Response) => {
         "Unable to scan the table. Error JSON:",
         JSON.stringify(err, null, 2)
       );
+      res.status(500).json({ error: "Internal server error" });
     } else {
       console.log("Scan succeeded.");
-      data.Items.forEach((item) => {
-        output.push(item);
-      });
+      if (data.Items) {
+        data.Items.forEach((item) => {
+          output.push(item);
+        });
+      }
       res.status(200).json({
         message: "File fetched successfully",
         metadata: output,
